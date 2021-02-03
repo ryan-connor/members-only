@@ -1,0 +1,1 @@
+Message board app using a REST API made with express and a Mongo Db as the backend, and React as the frontend.
