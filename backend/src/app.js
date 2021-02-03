@@ -1,8 +1,7 @@
 const express = require('express');
-const path = require('path');
-const session = require('session');
 const mongoose = require('mongoose');
 const mongoDb =  require('../hidden');
+const catalogRouter = require('../routes/catalog');
 //consider if need cors
 
 
@@ -11,14 +10,16 @@ mongoose.connect(mongoDb.mongoUrl, {useUnifiedTopology: true, useNewUrlParser: t
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo db connection error"));
 
-
 const app = express();
 
+//middleware to parse things correctly 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+//router to user and message routes in catalog
+app.use('/', catalogRouter); //leaving catalog router as the home router, 
 
 //basic template routes
-
-//add in a router to actual routes later
-
 app.get('/', (req,res) => {
     res.send("Http get request");
 });
@@ -36,7 +37,7 @@ app.delete('/', (req,res) => {
 });
 
 
-//make port a variable from a config file later
+//start app listening
 app.listen(3000, ()=> {
     console.log("app listening on port 3000");
 });
