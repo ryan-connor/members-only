@@ -24,15 +24,56 @@ exports.createUser = (req,res, next) => {
 
 //sign in user? not sure if should go here or elsewhere, put get privilege info for user as an action when signing in, store the info somewhere in state in the front end
 exports.signIn = (req,res, next) => {
-    res.send("sign in for user not implemented yet");
+    User.findById(req.params.id).exec( (err, user) => {
+        if (err) {
+            return next (err);
+        }
+        //for testing using raw password comparison, will update for security later with passport and bcrpyt
+        if (user.password === req.body.password) {
+            let response = {
+                message: "sign in successful, matched password",
+                user: {
+                    userid: user.id,
+                    username: user.username,
+                    privilege: user.privilege,
+                }
+            };
+            res.send(response);
+        }
+        else {
+            res.send("sign in failed")
+        };
+        
+    });
+
     //receive sign in from frontend and go through auth for user
     //return token/user privileges/user stuff
 };
 
-//sign out user? not sure if should go here or elsewhere, might not be a get request, could possibly be a post?
 
 exports.signOut = (req,res, next) => {
-    res.send("sign out for user not implemented yet");
+
+
+    User.findById(req.params.id).exec( (err, user) => {
+        if (err) {
+            res.send("error signing out");
+        }
+        else {
+            let response = {
+                message: "sign out successful",
+                user: {
+                    userid: user.id,
+                    username: user.username,
+                    privilege: user.privilege,
+                }
+            }
+            res.send(response);
+
+    }
+    }
+    );
+
+    // res.send("sign out for user not implemented yet");
     //receive user id and request to sign out from frontend
     //return some sort of sign out message
 };

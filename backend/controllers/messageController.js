@@ -2,16 +2,12 @@
 const express = require('express');
 const Message = require('../models/message');
 
-//if db stuff doesn't work properly then try to change it function instead of arrow declaration
-
-//TODO
-
 //post a new message
 exports.createMessage = (req, res, next) => {
         //get passed message object from frontend
         let message = new Message ({
             content: req.body.content,
-            datePosted: "date here",
+            datePosted: req.body.datePosted,
             user: req.body.user,
         });
     
@@ -25,23 +21,23 @@ exports.createMessage = (req, res, next) => {
 };
 
 //get all messages for frontend display
-exports.getMessages = (req,res) => {
+exports.getMessages = (req,res, next) => {
         //query db to get all messages, find all, populate author, sort by date,
         Message.find({}, 'content datePosted user').populate('user').sort([['datePosted','ascending']]).exec(function (err, listMessages) {
             if (err) {return next(err)};
             //if no errors then return all messages
-            res.send('messageList', {messageList: listMessages}); //see if returns a nice array or not
+            res.send( {messageList: listMessages}); //see if returns a nice array or not
         });
 }
 
 //delete a message
 exports.deleteMessage = (req, res, next) => {
         //find message by id that is passed through front end request and delete
-        Message.findByIdAndRemove(req.body.messageid, function deleteMessage(err) {
+        Message.findByIdAndRemove(req.params.id, function deleteMessage(err) {
             if (err) {return next(err)};
             res.send("message deleted successfully");
         });
 }
 
-//edit a message- do later
+//TODO- edit a message- do later
 

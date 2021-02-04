@@ -2,24 +2,24 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const messageContoller = require('../controllers/messageController');
+const messageController = require('../controllers/messageController');
 
 //create/post a new user
 router.post('/user', userController.createUser);
 
-//sign in user, leaving here for now, put get privilege info for user as an action when signing in, store the info somewhere in state in the front end, leaving both as get requests for now, will need to change
-router.get('/user/:userid', userController.signIn);
+//sign in user, put get privilege info for user as an action when signing in, store the info somewhere in state in the front end
+router.get('/user/:id/signIn', userController.signIn);
 
-//sign out user, leaving here for now
-router.get('/user/:userid', userController.signOut);
+//sign out user
+router.get('/user/:id/signOut', userController.signOut);
 
 //post a new message
-router.post('/message',messageContoller.createMessage);
+router.post('/message',messageController.createMessage);
 
 //get all messages for frontend display
-router.get('/messages',messageContoller.getMessages);
+router.get('/messages',messageController.getMessages);
 
 //delete a message
-router.delete('/message/:messageid',messageContoller.deleteMessage);
+router.delete('/message/:id',messageController.deleteMessage);
 
 module.exports= router;
