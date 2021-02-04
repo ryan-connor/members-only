@@ -1,49 +1,70 @@
 //controller for user actions
 const express = require('express');
 const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const hidden = require('../hidden');
+const { deleteOne } = require('../models/user');
 
 //create/post a new user
 exports.createUser = (req,res, next) => {
 
     //receive new user object from frontend
     //assume that user object from frontend is correct for now, later add san/val/error mgmt in here
-    let user = new User ({
-        username: req.body.username,
-        password: req.body.password,
-        privilege: req.body.privilege,
-    });
 
-    //save user to db
-    user.save( function (err) {
+    //hash password with bcrypt
+    bcrypt.hash(req.body.password, hidden.salt, (err, hashedPassword) => {
         if (err) {
+            console.log("error hashing password");
             return next(err);
+        } else {
+            //successfully hashed password
+            let user = new User ({
+                username: req.body.username,
+                password: hashedPassword,
+                privilege: req.body.privilege,
+            });
+        
+            //save user to db
+            user.save( function (err) {
+                if (err) {
+                    return next(err);
+                }
+                res.send("user successfully created");
+            });
         }
-        res.send("user successfully created");
-    });
+    })
 };
 
-//sign in user? not sure if should go here or elsewhere, put get privilege info for user as an action when signing in, store the info somewhere in state in the front end
+//sign in user put get privilege info for user as an action when signing in, store the info somewhere in state in the front end
 exports.signIn = (req,res, next) => {
     User.findById(req.params.id).exec( (err, user) => {
         if (err) {
             return next (err);
         }
-        //for testing using raw password comparison, will update for security later with passport and bcrpyt
-        if (user.password === req.body.password) {
-            let response = {
-                message: "sign in successful, matched password",
-                user: {
-                    userid: user.id,
-                    username: user.username,
-                    privilege: user.privilege,
-                }
+        //compare password with hashed password with bcrpyt
+        bcrypt.compare( req.body.password, user.password, (err, check)=> {
+            if (err) {
+                return next(err);
+            }
+            if (check) {
+                //successful login
+                let response = {
+                    message: "sign in successful, matched password",
+                    user: {
+                        userid: user.id,
+                        username: user.username,
+                        privilege: user.privilege,
+                    }
+                };
+                res.send(response);
+                //return done(null, response);
+            } else {
+                //login failed, passwords don't match
+                res.send("sign in failed");
+                //return done(null, false, {message: "incorrect password"});
             };
-            res.send(response);
-        }
-        else {
-            res.send("sign in failed")
-        };
-        
+        })
+       
     });
 
     //receive sign in from frontend and go through auth for user
