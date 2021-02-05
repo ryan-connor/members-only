@@ -4,6 +4,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const messageController = require('../controllers/messageController');
 
+
 //create/post a new user
 router.post('/user', userController.createUser);
 
@@ -12,6 +13,9 @@ router.get('/user/:id/signIn', userController.signIn);
 
 //sign out user
 router.get('/user/:id/signOut', userController.signOut);
+
+//protected user profile route
+router.get('/user/:id/profile', userController.profile);
 
 //post a new message
 router.post('/message',messageController.createMessage);

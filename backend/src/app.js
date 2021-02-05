@@ -2,7 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const mongoDb =  require('../hidden');
 const catalogRouter = require('../routes/catalog');
+const bodyParser = require("body-parser");
 //consider if need cors
+const passport = require('passport');
+const jwtStrategy = require('../strategies/jwt');
 
 
 //mongodb connection
@@ -11,6 +14,10 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo db connection error"));
 
 const app = express();
+
+//passport middleware
+passport.use(jwtStrategy);
+
 
 //middleware to parse things correctly 
 app.use(express.json());

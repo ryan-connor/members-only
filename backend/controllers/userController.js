@@ -4,6 +4,13 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const hidden = require('../hidden');
 const { deleteOne } = require('../models/user');
+const bodyParser = require("body-parser");
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+// const jwtStrategy = require('../strategies/jwt');
+// passport.use(jwtStrategy); check if this is needed here, think it can be left in app.js as middleware
+
+
 
 //create/post a new user
 exports.createUser = (req,res, next) => {
@@ -56,7 +63,25 @@ exports.signIn = (req,res, next) => {
                         privilege: user.privilege,
                     }
                 };
-                res.send(response);
+                let userResponse =  {
+                        userid: user.id,
+                        username: user.username,
+                        privilege: user.privilege,
+                    };
+
+                //generate a jwt token with the user info in it for auth later
+                let opts ={};
+                opts.expiresIn = '24h';
+                const secret = hidden.jwtSecret;
+                const token = jwt.sign(userResponse, secret, opts);
+                //currently send a user object and token with user object for testing
+                return res.status(200).json({
+                    message: 'sign in successful',
+                    user: userResponse,
+                    token: token,
+                });
+
+                //res.send(response);
                 //return done(null, response);
             } else {
                 //login failed, passwords don't match
@@ -80,6 +105,7 @@ exports.signOut = (req,res, next) => {
             res.send("error signing out");
         }
         else {
+            //TODO: deactivate token on sign out
             let response = {
                 message: "sign out successful",
                 user: {
@@ -99,3 +125,10 @@ exports.signOut = (req,res, next) => {
     //return some sort of sign out message
 };
 
+exports.profile = () => {passport.authenticate('jwt', {session: false}), (req, res) => {
+
+    console.log("made it into profile route function");
+    //protected route use passport jwt auth to access
+    res.send("this is a protected route for signed in user");
+}
+};
