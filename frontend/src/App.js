@@ -1,16 +1,18 @@
 import './App.css';
+import Header from './components/Header';
+import BlogPost from './components/BlogPost';
+import NewPost from './components/NewPost';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
 
-      <div>Members Only Message Board</div>
-      <div>Posts here</div>
+      <Header />
+      <h1>Members Only Message Board</h1>
+      <NewPost />
+      <BlogPost />
+ 
 
-
-
-      </header>
     </div>
   );
 }
