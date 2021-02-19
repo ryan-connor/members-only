@@ -44,6 +44,8 @@ exports.createUser = (req,res, next) => {
 
 //sign in user put get privilege info for user as an action when signing in, store the info somewhere in state in the front end
 exports.signIn = (req,res, next) => {
+
+    //change query to use username findOne({username: req.params.id})
     User.findById(req.params.id).exec( (err, user) => {
         if (err) {
             return next (err);

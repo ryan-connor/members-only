@@ -1,1 +1,1 @@
-Message board app using a REST API made with express and MongoDb as the backend, and React as the frontend.
+Message board CRUD app using a REST API made with Express and MongoDb for the backend, and React for the frontend.

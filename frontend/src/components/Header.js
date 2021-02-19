@@ -3,8 +3,6 @@ import React from "react";
 const Header = (props) => {
 
 
-    //functions
-
     return (
         <div className="header">
              <div className="headerItem">Posts from the Internet</div>

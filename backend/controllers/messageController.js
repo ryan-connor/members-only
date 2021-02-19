@@ -5,6 +5,9 @@ const Message = require('../models/message');
 //post a new message
 exports.createMessage = (req, res, next) => {
         //get passed message object from frontend
+
+        // console.log(req.body);
+
         let message = new Message ({
             content: req.body.content,
             datePosted: req.body.datePosted,
@@ -23,7 +26,7 @@ exports.createMessage = (req, res, next) => {
 //get all messages for frontend display
 exports.getMessages = (req,res, next) => {
         //query db to get all messages, find all, populate author, sort by date,
-        Message.find({}, 'content datePosted user').populate('user').sort([['datePosted','ascending']]).exec(function (err, listMessages) {
+        Message.find({}, 'content datePosted user').populate({path:'user', select:'username'}).sort([['datePosted','descending']]).exec(function (err, listMessages) {
             if (err) {return next(err)};
             //if no errors then return all messages
             res.send( {messageList: listMessages}); //see if returns a nice array or not

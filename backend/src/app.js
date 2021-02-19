@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 //consider if need cors
 const passport = require('passport');
 const jwtStrategy = require('../strategies/jwt');
+const cors = require('cors');
 
 
 //mongodb connection
@@ -15,8 +16,8 @@ db.on("error", console.error.bind(console, "mongo db connection error"));
 
 const app = express();
 
-//passport middleware
-passport.use(jwtStrategy);
+
+app.use(cors());
 
 
 //middleware to parse things correctly 
@@ -45,6 +46,6 @@ app.delete('/', (req,res) => {
 
 
 //start app listening
-app.listen(3000, ()=> {
-    console.log("app listening on port 3000");
+app.listen(8000, ()=> {
+    console.log("app listening on port 8000");
 });
