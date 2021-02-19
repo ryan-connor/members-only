@@ -13,17 +13,26 @@ function App() {
 
   //callback flag to rerender posts because of change
 const [posts, setPost] = useState(false);
+const [signedInUser, setSignedInUser] = useState();
 
 let renderPost = () => {
   setPost(posts?false:true);
 };
 
+let signInUser = (user) => {
+  setSignedInUser(user);
+  console.log("user set in state:", user);
+};
+
+let signOutUser = () => {
+  setSignedInUser('');
+};
+
+
   return (
     <div className="App">
 
-      <Header />
-      <Login />
-      {/* <SignUp/> */}
+      <Header signInUser={signInUser} currentUser={signedInUser}/>
       <h1>Members Only Message Board</h1>
       <h2>Speak your thoughts directly to the Internet!</h2>
       <NewPost callback={renderPost}/>

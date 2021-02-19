@@ -8,7 +8,6 @@ const BlogPost = (props) => {
     let formattedDate = post.datePosted.slice(0,10) +' '+ post.datePosted.slice(11,16); 
 
 
-
     return (
         <div className="blogPost">
              <div className="blogItem">{post.content}</div>

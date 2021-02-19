@@ -25,10 +25,13 @@ exports.createUser = (req,res, next) => {
             return next(err);
         } else {
             //successfully hashed password
+
+            //improve privilege logic later
+
             let user = new User ({
                 username: req.body.username,
                 password: hashedPassword,
-                privilege: req.body.privilege,
+                privilege: "user",
             });
         
             //save user to db
@@ -46,7 +49,8 @@ exports.createUser = (req,res, next) => {
 exports.signIn = (req,res, next) => {
 
     //change query to use username findOne({username: req.params.id})
-    User.findById(req.params.id).exec( (err, user) => {
+    // User.findById(req.params.id).exec( (err, user) => {
+    User.findOne({username: req.params.id}).exec( (err, user) => {
         if (err) {
             return next (err);
         }

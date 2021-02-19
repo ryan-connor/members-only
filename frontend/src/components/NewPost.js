@@ -30,9 +30,7 @@ const NewPost = (props) => {
         console.log(response);
 
         //callback to trigger post fetch/rerender
-        
         props.callback();
-
 
     }
 

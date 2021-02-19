@@ -36,10 +36,6 @@ const AllPosts = (props) => {
 
     }, [props.renderPost]);
 
-//store all posts in state then render when ready
-    
-    //store posts in state? leave off for now
-
     //render all posts using individual blog post component, pass each post object data as props
       
 

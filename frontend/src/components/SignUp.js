@@ -8,23 +8,21 @@ const SignUp = (props) => {
         password:''
     });
 
-    //function to create an account
 
     let handleSignUp = (e) => {
         e.preventDefault();
 
     let signUpUrl = "http://localhost:8000/user";
     
-    let signUp = async (e) => {
-        e.preventDefault(); 
+    let signUp = async () => {
+        // e.preventDefault(); 
         let user = {
             username: loginValue.username,
             password: loginValue.password,
             //add in privilege logic to backend
         }
-        console.log("user:", user);
 
-        let response = await fetch(signUpUrl, {method: 'Get', headers: {'Content-Type': 'application/json'}, body:JSON.stringify(user)});
+        let response = await fetch(signUpUrl, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify(user)});
         console.log(response);
 
         if (response.status >= 400 && response.status < 600) {
@@ -34,10 +32,12 @@ const SignUp = (props) => {
             //assuming for now this means log in is successful
             setLoginValue({username:'', password: ''});
             //return/display some sort of success message
+
+            //toggle sign up popup
+            props.toggle();
         }
 
         //add in proper error catching
-
 
 
     }
@@ -58,7 +58,7 @@ const SignUp = (props) => {
 
 
     return (
-        <div className="login">
+        <div className={"login "+ props.active}>
             <form className="loginForm" onSubmit={handleSignUp}>
                 <label for="username">Username</label>
                 <input type="text" name="username" placeholder="Enter Username" value={loginValue.username} onChange={handleChange}></input>

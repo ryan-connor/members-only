@@ -9,7 +9,7 @@ const messageController = require('../controllers/messageController');
 router.post('/user', userController.createUser);
 
 //sign in user, put get privilege info for user as an action when signing in, store the info somewhere in state in the front end
-router.get('/user/:id/signIn', userController.signIn);
+router.post('/user/:id/signIn', userController.signIn);
 
 //sign out user
 router.get('/user/:id/signOut', userController.signOut);

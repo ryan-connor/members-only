@@ -119,7 +119,9 @@ button:hover {
   position: absolute;
   background-color: lightslategrey;
   right: 10px;
+  top: 5vh;
   align-items: center;
+  border-radius: 5px;
 }
 
 .loginForm{
@@ -129,4 +131,8 @@ button:hover {
   align-items: center;
   height:100%;
   width:100%;
+}
+
+.hidden{
+  display:none;
 }
