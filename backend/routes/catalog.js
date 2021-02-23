@@ -4,6 +4,9 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const messageController = require('../controllers/messageController');
 
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+
 
 //create/post a new user
 router.post('/user', userController.createUser);
@@ -15,6 +18,7 @@ router.post('/user/:id/signIn', userController.signIn);
 router.get('/user/:id/signOut', userController.signOut);
 
 //protected user profile route
+router.use('/user/:id/profile', passport.authenticate('jwt', {session: false}));
 router.get('/user/:id/profile', userController.profile);
 
 //post a new message
@@ -22,6 +26,9 @@ router.post('/message',messageController.createMessage);
 
 //get all messages for frontend display
 router.get('/messages',messageController.getMessages);
+
+//protected message routes
+router.use('/message/:id', passport.authenticate('jwt', {session: false}));
 
 //edit a message
 router.put('/message/:id',messageController.editMessage);

@@ -36,7 +36,7 @@ let signOutUser = () => {
       <h1>Members Message Board</h1>
       <h2>Speak your thoughts directly to the Internet!</h2>
       <NewPost callback={renderPost} signedInUser={signedInUser}/>
-      <AllPosts renderPost={posts} signedInUser={signedInUser}/>
+      <AllPosts renderPost={posts} rerenderPosts={renderPost} signedInUser={signedInUser}/>
       
  
 

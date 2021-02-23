@@ -131,10 +131,10 @@ exports.signOut = (req,res, next) => {
     //return some sort of sign out message
 };
 
-exports.profile = () => {passport.authenticate('jwt', {session: false}), (req, res) => {
+exports.profile = (req, res, next) => {
 
     console.log("made it into profile route function");
+    console.log("req:", req.user);
     //protected route use passport jwt auth to access
     res.send("this is a protected route for signed in user");
-}
 };

@@ -19,6 +19,8 @@ const app = express();
 
 app.use(cors());
 
+passport.use(jwtStrategy); //added in
+
 
 //middleware to parse things correctly 
 app.use(express.json());

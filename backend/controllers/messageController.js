@@ -36,49 +36,65 @@ exports.getMessages = (req,res, next) => {
         });
 }
 
-exports.editMessage = () => {passport.authenticate('jwt', {session: false}), (req, res, next) => {
+exports.editMessage = (req, res, next) => {
 
     //passport verifies that jwt is good, add in passport to return user info from payload
 
+    console.log("req to backend edit route:", req.body);
+    console.log("from passport:", req.user);
 
     //query db to find specific message from request assuming jwt auth is good
     Message.findById(req.params.id, function editMessage(err, doc) {
 
          if (err) {return next(err)};
 
+         console.log("mongoose doc:", doc);
         //check that message created by user in db matches jwt user
-        // Pseudo: if(doc.user === payload.userId){}
+        if(doc.user.toString() === req.user.userid) {
+            
+            console.log("message created by matches jwt user");
 
-        //update message content and date
-        doc.content = req.body.content;
-        doc.datePosted = req.body.datePosted;
+            //update message content and date
+            doc.content = req.body.content;
+            doc.datePosted = req.body.datePosted;
 
-        //save updated message with new contents and date
-        doc.save(function (err) {
+            //save updated message with new contents and date
+            doc.save(function (err) {
             if (err) {
-                return next(err);
-            };
+                    return next(err);
+                };
             res.send("message saved successfully");
         }); 
+
+        } else {
+            res.send("can't edit messages from other users");
+        };
+
+
 
     });
 
 
-    res.send("edit message not implemented in backend yet");
+    //res.send("edit message not implemented in backend yet, but passport auth for this should be good");
 
-}
 };
 
 //delete a message
 exports.deleteMessage = (req, res, next) => {
-    //add in auth check for admin credentials
+    //passport checks that jwt is good
 
-        //find message by id that is passed through front end request and delete
-        Message.findByIdAndRemove(req.params.id, function deleteMessage(err) {
-            if (err) {return next(err)};
-            res.send("message deleted successfully");
-        });
-}
+    //if user from jwt is an admin then delete the message
+    if (req.user.privilege === "admin") {
+        
+                //find message by id that is passed through front end request and delete
+                Message.findByIdAndRemove(req.params.id, function deleteMessage(err) {
+                    if (err) {return next(err)};
+                    res.send("message deleted successfully");
+                });
+    } else {
+        res.send("Only admins can delete messages");
+    };
 
-//TODO- edit a message- do later
+};
+
 

@@ -5,6 +5,7 @@
   background-color: lightslategray;
   min-height: 100vh;
   width: 100%;
+  min-width: 165px;
 }
 
 /* header rules */
@@ -15,13 +16,16 @@
   align-items: center;
   padding: 10px 20px;
   background-color: #43586d;
+  flex-wrap: wrap;
 }
 
 .headerItem {
   width: auto;
   /* border: 1px solid black; */
   display: flex;
-
+  align-items: center;
+  margin: 0 5px;
+  position: relative;
 }
 
 button {
@@ -45,13 +49,47 @@ button:hover {
   color: lightgrey;
 }
 
+/* login and signup rules */
+
+.login {
+  width: 20vw;
+  min-width: 50px;
+  height: 20vw;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background-color: lightslategrey;
+  right: 10px;
+  top: 40px;
+  align-items: center;
+  border-radius: 5px;
+  max-width: 250px;
+  max-height: 250px;
+  font-size: min(max(12px, 2.5vw), 24px);
+  min-width: 100px;
+  min-height: 100px;
+}
+
+.loginForm{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height:100%;
+  width:100%;
+}
+
+input {
+  width: 90%
+}
 
 /* blog post rules */
 
 .blogPost {
   display: flex;
   flex-direction: column;
-  margin: 10px 5vw;
+  margin: 10px 10vw;
   border: 1px solid #a1adb9;
   border-radius: 10px;
 }
@@ -94,13 +132,14 @@ button:hover {
 
 .postButton {
   width: 20%;
+  min-width: fit-content;
   text-align: center;
   align-self: center;
   justify-self: center;
 }
 
 #newPost {
-  width:90%;
+  width:80%;
 }
 
 #newPostArea {
@@ -112,33 +151,10 @@ button:hover {
   background: #c5cfda;
   resize: none;
   min-height: 50px;
+  outline:none;
 }
 
-/* login and signup rules */
 
-.login {
-  width: 20vw;
-  min-width: 50px;
-  height: 20vw;
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  background-color: lightslategrey;
-  right: 10px;
-  top: 5vh;
-  align-items: center;
-  border-radius: 5px;
-}
-
-.loginForm{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  height:100%;
-  width:100%;
-}
 
 .hidden{
   display:none;

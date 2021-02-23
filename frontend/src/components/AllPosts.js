@@ -26,7 +26,7 @@ const AllPosts = (props) => {
         // console.log("post response:", posts);
         let mappedPosts= posts.messageList.map( (item,index) => {
             // console.log(item);
-            return <BlogPost post={item} key={'post'+index} signedInUser={props.signedInUser} renderPost={props.renderPost}/>
+            return <BlogPost post={item} key={'post'+index} signedInUser={props.signedInUser} rerenderPosts={props.rerenderPosts}/>
         });
         changePosts(mappedPosts);
         // console.log("state:", blogPosts);

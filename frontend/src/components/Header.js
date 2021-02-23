@@ -44,9 +44,10 @@ const Header = (props) => {
             <div className="headerItem">
                 <button className="headerItem" onClick={toggleLoginPopup}>Login</button>
                 <button className="headerItem" onClick={toggleSignUpPopup}>Sign up</button>
+                <Login signInUser={props.signInUser} toggle={toggleLoginPopup} active={loginPopup}/>
+                <SignUp active={signUpPopup} toggle={toggleSignUpPopup}/>
             </div>
-            <Login signInUser={props.signInUser} toggle={toggleLoginPopup} active={loginPopup}/>
-            <SignUp active={signUpPopup} toggle={toggleSignUpPopup}/>
+
         </div>
     )
 };
