@@ -36,7 +36,7 @@ const Login = (props) => {
             console.log("frontend thinks successful login");
             setLoginValue({username:'', password: ''});
             let responseJson = await response.json();
-            console.log(responseJson);
+            console.log("user:", responseJson);
 
             //save response and jwt in state/local storage
             //save username and privilege to app state via callback
@@ -70,8 +70,14 @@ const Login = (props) => {
     };
 
 
+    let hideOrShow = () => {
+        if (!props.active) {
+            return "hidden"
+        };
+    };
+
     return (
-        <div className={"login "+ props.active}>
+        <div className={"login "+ hideOrShow()}>
             <form className="loginForm" onSubmit={handleLogin}>
                 <label for="username">Username</label>
                 <input type="text" name="username" placeholder="Enter Username" value={loginValue.username} onChange={handleChange}></input>

@@ -13,7 +13,7 @@ function App() {
 
   //callback flag to rerender posts because of change
 const [posts, setPost] = useState(false);
-const [signedInUser, setSignedInUser] = useState();
+const [signedInUser, setSignedInUser] = useState('');
 
 let renderPost = () => {
   setPost(posts?false:true);
@@ -33,10 +33,10 @@ let signOutUser = () => {
     <div className="App">
 
       <Header signInUser={signInUser} currentUser={signedInUser}/>
-      <h1>Members Only Message Board</h1>
+      <h1>Members Message Board</h1>
       <h2>Speak your thoughts directly to the Internet!</h2>
-      <NewPost callback={renderPost}/>
-      <AllPosts renderPost={posts}/>
+      <NewPost callback={renderPost} signedInUser={signedInUser}/>
+      <AllPosts renderPost={posts} signedInUser={signedInUser}/>
       
  
 

@@ -1,6 +1,9 @@
 //controller for message actions
 const express = require('express');
+const message = require('../models/message');
 const Message = require('../models/message');
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
 //post a new message
 exports.createMessage = (req, res, next) => {
@@ -33,8 +36,43 @@ exports.getMessages = (req,res, next) => {
         });
 }
 
+exports.editMessage = () => {passport.authenticate('jwt', {session: false}), (req, res, next) => {
+
+    //passport verifies that jwt is good, add in passport to return user info from payload
+
+
+    //query db to find specific message from request assuming jwt auth is good
+    Message.findById(req.params.id, function editMessage(err, doc) {
+
+         if (err) {return next(err)};
+
+        //check that message created by user in db matches jwt user
+        // Pseudo: if(doc.user === payload.userId){}
+
+        //update message content and date
+        doc.content = req.body.content;
+        doc.datePosted = req.body.datePosted;
+
+        //save updated message with new contents and date
+        doc.save(function (err) {
+            if (err) {
+                return next(err);
+            };
+            res.send("message saved successfully");
+        }); 
+
+    });
+
+
+    res.send("edit message not implemented in backend yet");
+
+}
+};
+
 //delete a message
 exports.deleteMessage = (req, res, next) => {
+    //add in auth check for admin credentials
+
         //find message by id that is passed through front end request and delete
         Message.findByIdAndRemove(req.params.id, function deleteMessage(err) {
             if (err) {return next(err)};

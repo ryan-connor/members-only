@@ -23,6 +23,9 @@ router.post('/message',messageController.createMessage);
 //get all messages for frontend display
 router.get('/messages',messageController.getMessages);
 
+//edit a message
+router.put('/message/:id',messageController.editMessage);
+
 //delete a message
 router.delete('/message/:id',messageController.deleteMessage);
 

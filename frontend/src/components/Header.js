@@ -5,24 +5,30 @@ import SignUp from "./SignUp";
 const Header = (props) => {
 
 
-    const [loginPopup, setLoginPopup] = useState("hidden");
-    const [signUpPopup, setSignUpPopup]= useState("hidden");
+    const [loginPopup, setLoginPopup] = useState(false);
+    const [signUpPopup, setSignUpPopup]= useState(false);
 
     let toggleLoginPopup = () => {
-       if (loginPopup==="hidden") {
-           setLoginPopup('');
+       if (loginPopup) {
+           setLoginPopup(false);
+           setSignUpPopup(false);
        } else {
-           setLoginPopup("hidden");
+           setLoginPopup(true);
+           setSignUpPopup(false);
        };
     };
 
     let toggleSignUpPopup = () => {
-        if (signUpPopup==="hidden") {
-            setSignUpPopup('');
+        if (signUpPopup) {
+            setSignUpPopup(false);
+            setLoginPopup(false);
+            
         } else {
-            setSignUpPopup("hidden");
+            setSignUpPopup(true);
+            setLoginPopup(false);
         };
     };
+
 
     let welcomeUser= () => {
         let user=  (props.currentUser)?props.currentUser.username:"Guest";

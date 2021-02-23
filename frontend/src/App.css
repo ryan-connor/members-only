@@ -83,6 +83,13 @@ button:hover {
   background: #a1adb98a;
   border-radius: 5px;
   margin: 0 5px;
+  display: flex;
+}
+
+.editButton {
+  align-self: center;
+  margin: 0px 5px;
+  padding: 0px 10px;
 }
 
 .postButton {

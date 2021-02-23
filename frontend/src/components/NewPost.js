@@ -8,20 +8,24 @@ const NewPost = (props) => {
 
     let createMessagesUrl = "http://localhost:8000/message";
 
+    let currentUser = (props.signedInUser)?(props.signedInUser.userid):("6034000c6d16d9402cab3b50"); //set it with a guest id
+
+    //if user logged in then set current user to that value, otherwise leave as guest
+
     //function to POST message data to backend, note need to have user set from current user and have a default user in db
     let sendPost = async (e) => {
         e.preventDefault(); 
         let body = {
             content: postState,
             datePosted: new Date(),
-            user: "601b29bb02fa3b1257291dc5",
-        }
+            user: currentUser, //make dynamically change who is posting
+        };
 
         console.log("content from text area:", body.content);
         console.log("body:", body);
 
         //reset post/state back to blank
-        // setPostState('');
+        setPostState('');
 
         //send request to backend
 

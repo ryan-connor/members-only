@@ -56,9 +56,15 @@ const SignUp = (props) => {
         }
     };
 
+    let hideOrShow = () => {
+        if (!props.active) {
+            return "hidden"
+        };
+    };
+
 
     return (
-        <div className={"login "+ props.active}>
+        <div className={"login "+ hideOrShow()}>
             <form className="loginForm" onSubmit={handleSignUp}>
                 <label for="username">Username</label>
                 <input type="text" name="username" placeholder="Enter Username" value={loginValue.username} onChange={handleChange}></input>
