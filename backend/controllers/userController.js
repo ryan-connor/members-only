@@ -7,6 +7,7 @@ const { deleteOne } = require('../models/user');
 const bodyParser = require("body-parser");
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const {body, validationResult} = require('express-validator');
 // const jwtStrategy = require('../strategies/jwt');
 // passport.use(jwtStrategy); check if this is needed here, think it can be left in app.js as middleware
 
@@ -14,6 +15,17 @@ const passport = require('passport');
 
 //create/post a new user
 exports.createUser = (req,res, next) => {
+
+
+    //check validationresults for errors in validation/sanitization
+    const errors= validationResult(req);
+
+    if (!errors.isEmpty()) {
+        //errors exist in val/san
+        res.status(422).json({errors});
+        return;
+    };
+
 
     //receive new user object from frontend
     //assume that user object from frontend is correct for now, later add san/val/error mgmt in here
@@ -137,4 +149,13 @@ exports.profile = (req, res, next) => {
     console.log("req:", req.user);
     //protected route use passport jwt auth to access
     res.send("this is a protected route for signed in user");
+};
+
+
+//user validation/sanitization function, currently does basic check of request body for length, trim whitespace and escape HTML characters
+exports.validate = () => {
+
+    return [body('username','Invalid Username').trim().isLength({ min: 1 }).escape(),
+            body('password','Invalid Password').trim().isLength({ min: 1 }).escape()
+        ];
 };

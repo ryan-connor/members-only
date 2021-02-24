@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const passport = require('passport');
 const jwtStrategy = require('../strategies/jwt');
 const cors = require('cors');
+const expressValidator = require('express-validator');
 
 
 //mongodb connection
@@ -17,14 +18,18 @@ db.on("error", console.error.bind(console, "mongo db connection error"));
 const app = express();
 
 
-app.use(cors());
+app.use(cors()); //temporarily allow cors for development
 
-passport.use(jwtStrategy); //added in
+//use passport middleware
+passport.use(jwtStrategy); 
 
 
 //middleware to parse things correctly 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+//use express-validator middleware
+app.use(expressValidator());
 
 //router to user and message routes in catalog
 app.use('/', catalogRouter); //leaving catalog router as the home router, 

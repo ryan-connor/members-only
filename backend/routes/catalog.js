@@ -9,10 +9,10 @@ const passport = require('passport');
 
 
 //create/post a new user
-router.post('/user', userController.createUser);
+router.post('/user', userController.validate() ,userController.createUser);
 
 //sign in user, put get privilege info for user as an action when signing in, store the info somewhere in state in the front end
-router.post('/user/:id/signIn', userController.signIn);
+router.post('/user/:id/signIn', userController.validate(), userController.signIn);
 
 //sign out user
 router.get('/user/:id/signOut', userController.signOut);
@@ -22,7 +22,7 @@ router.use('/user/:id/profile', passport.authenticate('jwt', {session: false}));
 router.get('/user/:id/profile', userController.profile);
 
 //post a new message
-router.post('/message',messageController.createMessage);
+router.post('/message', messageController.validate(),messageController.createMessage);
 
 //get all messages for frontend display
 router.get('/messages',messageController.getMessages);
@@ -31,7 +31,7 @@ router.get('/messages',messageController.getMessages);
 router.use('/message/:id', passport.authenticate('jwt', {session: false}));
 
 //edit a message
-router.put('/message/:id',messageController.editMessage);
+router.put('/message/:id',messageController.validate(), messageController.editMessage);
 
 //delete a message
 router.delete('/message/:id',messageController.deleteMessage);

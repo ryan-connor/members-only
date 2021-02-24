@@ -4,9 +4,20 @@ const message = require('../models/message');
 const Message = require('../models/message');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const {body, validationResult} = require('express-validator');
 
 //post a new message
 exports.createMessage = (req, res, next) => {
+
+    //check validationresults for errors in validation/sanitization
+    const errors= validationResult(req);
+
+    if (!errors.isEmpty()) {
+        //errors exist in val/san
+        res.status(422).json({errors});
+        return;
+    };
+
         //get passed message object from frontend
 
         // console.log(req.body);
@@ -37,6 +48,8 @@ exports.getMessages = (req,res, next) => {
 }
 
 exports.editMessage = (req, res, next) => {
+
+    //check validationresults for errors in validation/sanitization
 
     //passport verifies that jwt is good, add in passport to return user info from payload
 
@@ -97,4 +110,13 @@ exports.deleteMessage = (req, res, next) => {
 
 };
 
+
+//message validation/sanitization function, currently does basic check of request body for length, trim whitespace and escape HTML characters
+exports.validate = () => {
+
+    return [body('content','Invalid Username').trim().isLength({ min: 1 }).escape(),
+            body('datePosted','Invalid Password').trim().isLength({ min: 1 }).escape(),
+            body('user', 'Invalid User').trim().isLength({min:1}).escape()
+        ];
+};
 
