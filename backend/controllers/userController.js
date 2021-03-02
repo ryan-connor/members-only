@@ -1,24 +1,16 @@
 //controller for user actions
-const express = require('express');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const hidden = require('../hidden');
-const { deleteOne } = require('../models/user');
-const bodyParser = require("body-parser");
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
 const {body, validationResult} = require('express-validator');
-// const jwtStrategy = require('../strategies/jwt');
-// passport.use(jwtStrategy); check if this is needed here, think it can be left in app.js as middleware
-
-
 
 //create/post a new user
 exports.createUser = (req,res, next) => {
 
-
     //check validationresults for errors in validation/sanitization
     const errors= validationResult(req);
+    // console.log("val errors:", errors);
 
     if (!errors.isEmpty()) {
         //errors exist in val/san
@@ -26,19 +18,24 @@ exports.createUser = (req,res, next) => {
         return;
     };
 
-
     //receive new user object from frontend
-    //assume that user object from frontend is correct for now, later add san/val/error mgmt in here
+    //check that user doesn't already exist before creating
+    User.findOne({username: req.body.username}).exec( (err, user) => {
+        
+        if (err) {
+            return next (err);
+        };
+        if (user) {            
+            return res.status(400).send("user already exists");
+        };
 
     //hash password with bcrypt
     bcrypt.hash(req.body.password, hidden.salt, (err, hashedPassword) => {
         if (err) {
-            console.log("error hashing password");
+            
             return next(err);
         } else {
             //successfully hashed password
-
-            //improve privilege logic later
 
             let user = new User ({
                 username: req.body.username,
@@ -55,32 +52,42 @@ exports.createUser = (req,res, next) => {
             });
         }
     })
+});
 };
 
-//sign in user put get privilege info for user as an action when signing in, store the info somewhere in state in the front end
+//sign in user
 exports.signIn = (req,res, next) => {
 
-    //change query to use username findOne({username: req.params.id})
-    // User.findById(req.params.id).exec( (err, user) => {
+        //check validationresults for errors in validation/sanitization
+        const errors= validationResult(req);
+        // console.log("val errors:", errors);
+    
+        if (!errors.isEmpty()) {
+            //errors exist in val/san
+            res.status(422).json({errors});
+            return;
+        };
+
+     // find user in db
     User.findOne({username: req.params.id}).exec( (err, user) => {
+        
         if (err) {
             return next (err);
-        }
+        };
+        if (!user) {
+            return res.status(400).send("user not found");
+        };
+
         //compare password with hashed password with bcrpyt
         bcrypt.compare( req.body.password, user.password, (err, check)=> {
             if (err) {
+                
                 return next(err);
-            }
+            };
             if (check) {
+                
                 //successful login
-                let response = {
-                    message: "sign in successful, matched password",
-                    user: {
-                        userid: user.id,
-                        username: user.username,
-                        privilege: user.privilege,
-                    }
-                };
+
                 let userResponse =  {
                         userid: user.id,
                         username: user.username,
@@ -92,65 +99,37 @@ exports.signIn = (req,res, next) => {
                 opts.expiresIn = '24h';
                 const secret = hidden.jwtSecret;
                 const token = jwt.sign(userResponse, secret, opts);
-                //currently send a user object and token with user object for testing
+                
                 return res.status(200).json({
                     message: 'sign in successful',
                     user: userResponse,
                     token: token,
                 });
 
-                //res.send(response);
-                //return done(null, response);
             } else {
                 //login failed, passwords don't match
-                res.send("sign in failed");
-                //return done(null, false, {message: "incorrect password"});
+                return res.status(400).send("sign in failed");
             };
         })
        
     });
-
-    //receive sign in from frontend and go through auth for user
-    //return token/user privileges/user stuff
 };
 
 
-exports.signOut = (req,res, next) => {
+//currently signout on the backend is not implemented, 
+// exports.signOut = (req,res, next) => {
+// in the future this could be done by maintaining a blacklist of signed out JWTs that have not yet expired
+// and checking JWTs against that list when authenticating
+//   res.send("sign out for user not implemented yet");
+// };
 
-
-    User.findById(req.params.id).exec( (err, user) => {
-        if (err) {
-            res.send("error signing out");
-        }
-        else {
-            //TODO: deactivate token on sign out
-            let response = {
-                message: "sign out successful",
-                user: {
-                    userid: user.id,
-                    username: user.username,
-                    privilege: user.privilege,
-                }
-            }
-            res.send(response);
-
-    }
-    }
-    );
-
-    // res.send("sign out for user not implemented yet");
-    //receive user id and request to sign out from frontend
-    //return some sort of sign out message
-};
-
-exports.profile = (req, res, next) => {
-
-    console.log("made it into profile route function");
-    console.log("req:", req.user);
-    //protected route use passport jwt auth to access
-    res.send("this is a protected route for signed in user");
-};
-
+//TODO implement proper user profile page
+// exports.profile = (req, res, next) => {
+//     console.log("made it into profile route function");
+//     // console.log("req:", req.user);
+//     //protected route use passport jwt auth to access
+//     res.send("this is a protected route for signed in user");
+// };
 
 //user validation/sanitization function, currently does basic check of request body for length, trim whitespace and escape HTML characters
 exports.validate = () => {

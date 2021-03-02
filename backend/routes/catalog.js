@@ -3,23 +3,13 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const messageController = require('../controllers/messageController');
-
-const jwt = require('jsonwebtoken');
 const passport = require('passport');
-
 
 //create/post a new user
 router.post('/user', userController.validate() ,userController.createUser);
 
-//sign in user, put get privilege info for user as an action when signing in, store the info somewhere in state in the front end
+//sign in user
 router.post('/user/:id/signIn', userController.validate(), userController.signIn);
-
-//sign out user
-router.get('/user/:id/signOut', userController.signOut);
-
-//protected user profile route
-router.use('/user/:id/profile', passport.authenticate('jwt', {session: false}));
-router.get('/user/:id/profile', userController.profile);
 
 //post a new message
 router.post('/message', messageController.validate(),messageController.createMessage);
@@ -35,5 +25,13 @@ router.put('/message/:id',messageController.validate(), messageController.editMe
 
 //delete a message
 router.delete('/message/:id',messageController.deleteMessage);
+
+// //sign out user
+// router.get('/user/:id/signOut', userController.signOut);
+
+//TODO implement proper user profile page
+//protected user profile route
+// router.use('/user/:id/profile', passport.authenticate('jwt', {session: false}));
+// router.get('/user/:id/profile', userController.profile);
 
 module.exports= router;

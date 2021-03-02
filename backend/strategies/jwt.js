@@ -4,18 +4,11 @@ const hidden = require('../hidden');
 
 const opts = {};
 
-//note assumes token is in auth header as bearer, could configure otherwise
+//assumes token is in auth header as bearer token
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = hidden.jwtSecret;
 
 module.exports = new JwtStrategy( opts, (jwt_payload, done) => {
 
-    console.log("made it into the jwt strategy");
-    // console.log("payload:", jwt_payload)
-
-    //could add check for user in db here later, currently always returns true if jwt verifies
-
-    //change to return the user id from payload
     return done(null, jwt_payload);
-
 });

@@ -1,9 +1,5 @@
 //controller for message actions
-const express = require('express');
-const message = require('../models/message');
 const Message = require('../models/message');
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
 const {body, validationResult} = require('express-validator');
 
 //post a new message
@@ -11,6 +7,7 @@ exports.createMessage = (req, res, next) => {
 
     //check validationresults for errors in validation/sanitization
     const errors= validationResult(req);
+    //console.log("val errors:", errors);
 
     if (!errors.isEmpty()) {
         //errors exist in val/san
@@ -19,8 +16,6 @@ exports.createMessage = (req, res, next) => {
     };
 
         //get passed message object from frontend
-
-        // console.log(req.body);
 
         let message = new Message ({
             content: req.body.content,
@@ -43,30 +38,30 @@ exports.getMessages = (req,res, next) => {
         Message.find({}, 'content datePosted user').populate({path:'user', select:'username'}).sort([['datePosted','descending']]).exec(function (err, listMessages) {
             if (err) {return next(err)};
             //if no errors then return all messages
-            res.send( {messageList: listMessages}); //see if returns a nice array or not
+            res.send( {messageList: listMessages}); 
         });
 }
 
 exports.editMessage = (req, res, next) => {
 
     //check validationresults for errors in validation/sanitization
+        const errors= validationResult(req);
+        // console.log("val errors:", errors);
 
-    //passport verifies that jwt is good, add in passport to return user info from payload
+        if (!errors.isEmpty()) {
+            //errors exist in val/san
+            res.status(422).json({errors});
+            return;
+        };
 
-    console.log("req to backend edit route:", req.body);
-    console.log("from passport:", req.user);
-
-    //query db to find specific message from request assuming jwt auth is good
+    //query db to find specific message from request
     Message.findById(req.params.id, function editMessage(err, doc) {
 
          if (err) {return next(err)};
 
-         console.log("mongoose doc:", doc);
         //check that message created by user in db matches jwt user
         if(doc.user.toString() === req.user.userid) {
             
-            console.log("message created by matches jwt user");
-
             //update message content and date
             doc.content = req.body.content;
             doc.datePosted = req.body.datePosted;
@@ -83,18 +78,11 @@ exports.editMessage = (req, res, next) => {
             res.send("can't edit messages from other users");
         };
 
-
-
     });
-
-
-    //res.send("edit message not implemented in backend yet, but passport auth for this should be good");
-
 };
 
 //delete a message
 exports.deleteMessage = (req, res, next) => {
-    //passport checks that jwt is good
 
     //if user from jwt is an admin then delete the message
     if (req.user.privilege === "admin") {
@@ -114,8 +102,8 @@ exports.deleteMessage = (req, res, next) => {
 //message validation/sanitization function, currently does basic check of request body for length, trim whitespace and escape HTML characters
 exports.validate = () => {
 
-    return [body('content','Invalid Username').trim().isLength({ min: 1 }).escape(),
-            body('datePosted','Invalid Password').trim().isLength({ min: 1 }).escape(),
+    return [body('content','Message can not be blank').trim().isLength({ min: 1 }).escape(),
+            body('datePosted','Invalid Date').trim().isLength({ min: 1 }).escape(),
             body('user', 'Invalid User').trim().isLength({min:1}).escape()
         ];
 };
