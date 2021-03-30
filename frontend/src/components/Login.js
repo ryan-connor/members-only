@@ -63,9 +63,9 @@ const Login = (props) => {
     return (
         <div className={"login "+ hideOrShow()}>
             <form className="loginForm" onSubmit={handleLogin}>
-                <label for="username">Username</label>
+                <label htmlFor="username">Username</label>
                 <input type="text" name="username" placeholder="Enter Username" minLength="1" required value={loginValue.username} onChange={handleChange}></input>
-                <label for="password">Password</label>
+                <label htmlFor="password">Password</label>
                 <input type="password" name="password" placeholder="Enter Password" minLength="1" required value={loginValue.password} onChange={handleChange}></input>
                 <button type="submit">Login</button>
                 {errors && <div id="loginError">Error: Invalid Login Info</div>}

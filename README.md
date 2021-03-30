@@ -25,9 +25,9 @@ This project was interesting exposure to JSON Web Tokens and basic crpytographic
 
 ## Usage/Install
 
-Clone the project and then cd into the respective folders.
+Clone the project and then cd into the respective folders. 
 
-`Frontend`:
+**Frontend**:
 
 To install the dependencies, with [npm](https://npmjs.org/) installed, run
 
@@ -41,7 +41,7 @@ To run the app in development mode, run
 $ npm start
 ```
 
-`Backend`:
+**Backend**:
 
 To install the dependencies, with [npm](https://npmjs.org/) installed, run
 
@@ -53,4 +53,14 @@ To run the app in development mode, run
 
 ```
 $ npm run devstart
+```
+
+**Note:** Since there are some private values used for Mongo DB access, JWT secret, and salt value that are intentionally not uploaded to github, in order to fully run your own version of this app those values would need to be added in. Specifically in the `/backend` folder a file named `hidden.js` will need to be created with the following code with proper values inserted in:
+```
+let hidden = {
+    mongoUrl: "Mongo DB Url Here",
+    salt: Salt Value Here,
+    jwtSecret: "JWT Secret Value Here",
+};
+module.exports = hidden;
 ```
