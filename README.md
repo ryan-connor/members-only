@@ -1,3 +1,7 @@
+<h4 align="center">
+<img alt="Members Message Board Gif" src="demo/MembersMessageBoard.gif" width="900px">
+</h4>
+
 ## Members Message Board
 Message Board CRUD app for users to post and read messages.
 
